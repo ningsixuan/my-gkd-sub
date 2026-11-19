@@ -37,13 +37,20 @@ jobs:
       - name: 构建 dist
         run: pnpm run build
 
+      # 每天写一次心跳文件，保证仓库持续有活动，
+      # 避免公开仓库连续 60 天无活动导致定时任务被 GitHub 暂停。
+      - name: 写入心跳
+        run: |
+          mkdir -p .github
+          printf 'last sync: %s\n' "$(date -u +'%Y-%m-%d %H:%M UTC')" > .github/last-sync.txt
+
       - name: 提交并推送
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
           if git diff --cached --quiet; then
-            echo "上游无变化，跳过提交"
+            echo "没有任何变化，跳过提交"
             exit 0
           fi
           git commit -m "chore: 同步上游规则 $(date -u +%F)"
