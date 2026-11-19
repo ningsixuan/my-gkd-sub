@@ -1,12 +1,12 @@
 import type { RawApp, RawAppGroup } from '@gkd-kit/api';
 import { defineGkdSubscription } from '@gkd-kit/define';
-import { batchImportApps } from '@gkd-kit/tools';
 import categories from './categories';
 import globalGroups, { OPEN_AD_ORDER } from './globalGroups';
+import allApps from './apps/allApps';
 
-const apps = await batchImportApps(`${import.meta.dirname}/apps`);
+// 全部应用规则集中在 src/apps/allApps.ts（来源见仓库根目录 来源说明.md）
 const rawApps: RawApp[] = [];
-apps.forEach((appConfig) => {
+allApps.forEach((appConfig: RawApp) => {
   appConfig.groups?.forEach((g: RawAppGroup) => {
     if (g.name.startsWith('开屏广告')) {
       g.order = OPEN_AD_ORDER;
