@@ -15478,7 +15478,7 @@ const apps: RawApp[] = [
           {
             key: 0,
             matches:
-              '@[(name$="ImageView" || getChild(0).name$="ImageView") && desc!="back_unfold"][clickable=true][visibleToUser=true][width<102 && height<102] <n [childCount>1] >(2,3) [text*="查看" || text$="优惠" || text^="立即" || text^="马上" || text*="参与" || text*="参加" || text*="免费" || text^="领" || text$="金币"][text!="查看下载"][text.length<10]',
+              '@[(name$="ImageView" || getChild(0).name$="ImageView") && desc!="back_unfold"][clickable=true][visibleToUser=true][width<102 && height<102] <n [childCount>1] >(2,3) [text*="查看" || text$="优惠" || text^="立即" || text^="马上" || text*="参与" || text*="参加" || text*="免费" || text^="领" || text$="金币"][!(text="查看下载" || text="立即播放")][text.length<10]',
             snapshotUrls: [
               'https://i.gkd.li/i/12908734', // 查看详情
               'https://i.gkd.li/i/18138903', // 立享优惠
@@ -15495,7 +15495,8 @@ const apps: RawApp[] = [
             excludeSnapshotUrls: [
               'https://i.gkd.li/i/28821485', // 用 [name$="ImageView" || getChild(0).name$="ImageView"][visibleToUser=false] 排除
               'https://i.gkd.li/i/31111672', // 添加 desc!="back_unfold" 条件排除
-              'https://i.gkd.li/i/32085481', // 添加 [text!="查看下载"] 条件排除
+              'https://i.gkd.li/i/32085481', // 排除 [text="查看下载"]
+              'https://i.gkd.li/i/35098348', // 排除 [text="立即播放"]
             ],
             exampleUrls:
               'https://e.gkd.li/3de0d5d9-0c02-4fe7-b5e8-b9fdb6688f8e',
@@ -16308,38 +16309,47 @@ const apps: RawApp[] = [
       {
         key: 2,
         name: '局部广告-直播间悬浮广告',
+        fastQuery: true,
         activityIds: '.liveroom.ChannelPage',
         rules: [
           {
             key: 0,
-            fastQuery: true,
-            matches: '[vid="ad_close"]',
+            matches:
+              '[vid="ad_close" || vid="game_header_close" || vid="iv_vertical_close"][clickable=true]',
             snapshotUrls: [
-              'https://i.gkd.li/i/12901045',
-              'https://i.gkd.li/i/12901044',
+              'https://i.gkd.li/i/12901045', //旧, ad_close
+              'https://i.gkd.li/i/12901044', //旧, ad_close
+              'https://i.gkd.li/i/13395604', //旧, game_header_close
+              'https://i.gkd.li/i/13395606', //旧, game_header_close
+              'https://i.gkd.li/i/35090738', // iv_vertical_close
             ],
+            exampleUrls:
+              'https://e.gkd.li/8a375b99-4905-476c-8ff6-c27f4ef7a613',
           },
           {
             key: 1,
-            fastQuery: true,
-            matches: '[vid="game_header_close"]',
-            snapshotUrls: [
-              'https://i.gkd.li/i/13395604',
-              'https://i.gkd.li/i/13395606',
-            ],
+            matches:
+              '@[desc="关闭"] <n ViewGroup +2 FrameLayout >3 [text="广告"]',
+            snapshotUrls: 'https://i.gkd.li/i/35090752',
+            exampleUrls:
+              'https://e.gkd.li/178268bf-af87-45b2-a41b-707b3bb5461a',
           },
           {
             key: 2,
-            fastQuery: true,
             matches: '[vid="popup_banner"] >2 [vid="ui_count_down"]',
-            snapshotUrls: ['https://i.gkd.li/i/13417245'],
+            snapshotUrls: 'https://i.gkd.li/i/13417245',
           },
           {
             key: 3,
-            fastQuery: true,
+            activityIds: ['.liveroom.ChannelPage', '.homepage.Homepage'],
             matches:
-              '@ViewGroup[clickable=true][visibleToUser=true] <2 ViewGroup < FrameLayout <2 FrameLayout < [vid="miniapp_content_container"]',
-            snapshotUrls: 'https://i.gkd.li/i/13401266',
+              '@[id=null][visibleToUser=true][width<72 && height<72][right>prev.right.minus(20)] <<n [vid="miniapp_content_container"]',
+            snapshotUrls: [
+              'https://i.gkd.li/i/13401266', //无vid旧快照
+              'https://i.gkd.li/i/35090761',
+            ],
+            exampleUrls:
+              'https://e.gkd.li/fdb69898-e142-4bcb-be1c-408d6a9fd392',
           },
         ],
       },
@@ -42682,69 +42692,6 @@ const apps: RawApp[] = [
         ],
       },
       {
-        key: 17,
-        name: '功能类-评论区-自动展开评论',
-        desc: '只展开一级评论，不点击展示更多',
-        fastQuery: true,
-        activityIds: [
-          '.detail.ui.DetailActivity',
-          '.com.ss.android.ugc.aweme.main.MainActivity',
-          '.com.bytedance.ies.ugc.aweme.photos.detail.flow.page.FlowPageActivity',
-          '.searcharticle.detail.ArticleDetailActivity',
-          '.search.activity.SearchResultActivity',
-          '.detail.ultra.ui.UltraDetailActivity',
-          '.playlet.videodetail.PlayletVideoPlayActivity',
-        ],
-        rules: [
-          {
-            key: 0,
-            matches: '@[clickable=true] > [text^="展开"][text$="回复"]',
-            snapshotUrls: 'https://i.gkd.li/i/32755488',
-            excludeSnapshotUrls: 'https://i.gkd.li/i/32755811', // 排除 [展开更多]
-            exampleUrls: [
-              'https://e.gkd.li/a2be5c9e-afe9-4992-8c83-bbe191d68d76',
-              'https://e.gkd.li/1609405d-5a20-445d-bb2f-5de5a9b1237d', // 排除 [展开更多]
-            ],
-          },
-          // {
-          //   key: 1,
-          //   matches:
-          //     '[text^="展开"][text$="回复"] <2 @[clickable=true][childCount=3] <<n ViewPager <(3,4) LinearLayout + [childCount=2] > [desc$="评论区"] + [vid="back_btn"]',
-          //   snapshotUrls: 'null', // 此情况勘查未遇到,碰上再说
-          // },
-        ],
-      },
-      {
-        key: 18,
-        name: '功能类-评论区-自动展开评论_全部',
-        desc: '基于上面追加点击展开更多',
-        fastQuery: true,
-        activityIds: [
-          '.detail.ui.DetailActivity',
-          '.com.ss.android.ugc.aweme.main.MainActivity',
-          '.com.bytedance.ies.ugc.aweme.photos.detail.flow.page.FlowPageActivity',
-          '.searcharticle.detail.ArticleDetailActivity',
-          '.search.activity.SearchResultActivity',
-          '.detail.ultra.ui.UltraDetailActivity',
-          '.playlet.videodetail.PlayletVideoPlayActivity',
-        ],
-        rules: [
-          {
-            key: 0,
-            matches: '@[clickable=true] > [text^="展开更多"]',
-            snapshotUrls: 'https://i.gkd.li/i/32755811',
-            exampleUrls:
-              'https://e.gkd.li/1609405d-5a20-445d-bb2f-5de5a9b1237d',
-          },
-          // {
-          //   key: 2,
-          //   matches:
-          //     '[text^="展开更多"] <2 @[clickable=true][childCount=3] <<n ViewPager <(3,4) LinearLayout + [childCount=2] > [desc$="评论区"] + [vid="back_btn"]',
-          //   snapshotUrls: 'null',
-          // },
-        ],
-      },
-      {
         key: 19,
         name: '功能类-自动开启[自动连播]',
         desc: '仅在刚进抖极时第1个视频生效, ①[长按]视频 ②开启[自动联播]',
@@ -49014,6 +48961,29 @@ const apps: RawApp[] = [
             matches:
               '[id="com.tencent.ysdkcore:id/com_tencent_ysdk_icon_h5_xx"]',
             snapshotUrls: 'https://i.gkd.li/i/13276317',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'com.tencent.tmgp.supercell.boombeach',
+    name: '海岛奇兵', //游戏
+    groups: [
+      {
+        key: 1,
+        name: '通知提示-未成年弹窗',
+        desc: 'x掉',
+        actionMaximum: 1,
+        resetMatch: 'app',
+        rules: [
+          {
+            activityIds: 'com.supercell.titan.tencent.GameAppTencentMidas',
+            matches:
+              '@TextView[width<104 && height<104] -n [visibleToUser=true][text*="未成年游戏教育"]',
+            snapshotUrls: 'https://i.gkd.li/i/35075364',
+            exampleUrls:
+              'https://e.gkd.li/beb30964-2fbf-42a4-a325-8d6a4f209f65',
           },
         ],
       },
