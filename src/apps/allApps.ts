@@ -13731,8 +13731,30 @@ const apps: RawApp[] = [
   },
   {
     id: 'com.danlan.xiaolan',
-    name: 'Blued极速版',
+    name: 'Blued X',
     groups: [
+      {
+        key: 1,
+        name: '开屏广告',
+        fastQuery: true,
+        matchTime: 10000,
+        actionMaximum: 1,
+        actionMaximumKey: 0,
+        resetMatch: 'app',
+        rules: [
+          {
+            key: 0,
+            matches:
+              '[text*="跳过"][text.length<10][width<500 && height<300][visibleToUser=true]',
+          },
+          {
+            key: 1,
+            matches:
+              '@ImageView[width<156 && height<156] < [visibleToUser=true] < [childCount=1] +2 ViewGroup >2 [text="广告"]',
+            snapshotUrls: 'https://i.gkd.li/i/35126957',
+          },
+        ],
+      },
       {
         key: 3,
         name: '分段广告-卡片广告',
@@ -15850,6 +15872,38 @@ const apps: RawApp[] = [
             snapshotUrls: 'https://i.gkd.li/i/34419676',
             exampleUrls:
               'https://e.gkd.li/77dca54c-86b8-40a6-b00a-44e4f8adedf8',
+          },
+        ],
+      },
+      {
+        key: 21,
+        name: '功能类-自动[展开更多]评论',
+        desc: '小说段评区/短剧评论区, 点击[展开更多/展开n条回复]',
+        rules: [
+          {
+            fastQuery: true,
+            actionCd: 500,
+            activityIds: [
+              '.reader.ui.ReaderActivity', //A 小说阅读界面
+              '.pages.main.MainFragmentActivity', //B 短剧界面
+            ],
+            matches: [
+              '[id="android:id/content"][height>prev.height.plus(100)] >n [id="android:id/content"][height>500]', //出现评论区的可快查特征, 防阻塞同界面的其他规则
+              '@[clickable=true] > [visibleToUser=true][text^="展开"][text$="回复" || text$="更多"]', //无快查
+            ],
+            snapshotUrls: [
+              'https://i.gkd.li/i/35147917', //A 展开...条回复
+              'https://i.gkd.li/i/35147919', //A 展开更多
+              'https://i.gkd.li/i/35173217', //B 展开...条回复
+            ],
+            excludeSnapshotUrls: [
+              'https://i.gkd.li/i/35165101', //A 阅读界面,未出现评论区
+              'https://i.gkd.li/i/35173220', //B 短剧界面,未出现评论区
+            ],
+            exampleUrls: [
+              'https://e.gkd.li/e0c12712-4b1e-4b75-a9ec-d1a8042156f6',
+              'https://e.gkd.li/0d2d257a-abda-4255-b971-faf06b565cb7',
+            ],
           },
         ],
       },
@@ -27648,6 +27702,24 @@ const apps: RawApp[] = [
           },
         ],
       },
+      {
+        key: 10,
+        name: '权限提示-通讯录权限',
+        desc: '点击[以后再说]',
+        rules: [
+          {
+            fastQuery: true,
+            activityIds: 'com.yxcorp.gifshow.HomeActivity',
+            matches: [
+              '[text*="通讯录"][visibleToUser=true]',
+              '[text="以后再说"][clickable=true]',
+            ],
+            snapshotUrls: 'https://i.gkd.li/i/35119491',
+            exampleUrls:
+              'https://e.gkd.li/3c25da6d-bc0d-420d-9362-c8bb1edf322b',
+          },
+        ],
+      },
     ],
   },
   {
@@ -33861,6 +33933,27 @@ const apps: RawApp[] = [
             exampleUrls:
               'https://m.gkd.li/57941037/c140267a-a48a-45a9-9303-7507aa2008e4',
             snapshotUrls: 'https://i.gkd.li/i/13694552',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'com.mzk.android',
+    name: '大连明珠卡',
+    groups: [
+      {
+        key: 1,
+        name: '开屏广告',
+        fastQuery: true,
+        matchTime: 10000,
+        actionMaximum: 1,
+        resetMatch: 'app',
+        rules: [
+          {
+            key: 0,
+            matches: '[vid="cll_splash_skip"][clickable=true]',
+            snapshotUrls: 'https://i.gkd.li/i/35126804',
           },
         ],
       },
@@ -44350,6 +44443,25 @@ const apps: RawApp[] = [
             matches:
               'ImageView[width<150 && height<150] < @RelativeLayout[clickable=true][childCount=1] <2 [childCount=2] < [id="android:id/content"]',
             snapshotUrls: 'https://i.gkd.li/i/30859526', //旧快照,无快查 (已转成webp截图)
+          },
+        ],
+      },
+      {
+        key: 3,
+        name: '更新提示',
+        desc: '点击[取消]',
+        // matchTime: 10000, //从其他应用做任务跳转打开的一淘,做完任务回到一淘首页才出现更新弹窗,不止10秒
+        actionMaximum: 1,
+        resetMatch: 'app',
+        rules: [
+          {
+            fastQuery: true,
+            activityIds: '.maintab.MainTabActivity',
+            matches: [
+              '[text*="更新" || text*="新版本" || text*="升级"][visibleToUser=true]',
+              '[text="取消"][clickable=true]',
+            ],
+            snapshotUrls: 'https://i.gkd.li/i/35125923',
           },
         ],
       },
@@ -55946,24 +56058,29 @@ const apps: RawApp[] = [
         fastQuery: true,
         matchTime: 10000,
         actionMaximum: 1,
-        activityIds: '.ui.activity.HomeActivity',
+        activityIds: [
+          '.ui.activity.HomeActivity',
+          'com.bbk.launcher2.Launcher',
+          '.ui.activity.MainFrameActivity',
+        ],
         rules: [
           {
             key: 0,
-            name: '自动签到',
+            name: '①自动签到',
             matches:
-              '@[clickable=true] >2 [text="领取今日现金"][visibleToUser=true]',
+              '@[clickable=true] >(1,2) [text="领取今日现金"][visibleToUser=true]',
             snapshotUrls: [
               'https://i.gkd.li/i/13201422',
               'https://i.gkd.li/i/13372677',
+              'https://i.gkd.li/i/35172532',
             ],
           },
           {
             preKeys: [0],
             key: 1,
-            name: '在签到后关闭弹窗',
+            name: '②签到后关闭弹窗',
             matches:
-              '@[clickable=true] >2 [text="明日继续来领"][visibleToUser=true]',
+              '@[clickable=true] >(1,2) [text="明日继续来领"][visibleToUser=true]',
             snapshotUrls: 'https://i.gkd.li/i/13205634',
           },
         ],
