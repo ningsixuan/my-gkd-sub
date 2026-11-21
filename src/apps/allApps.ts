@@ -15886,6 +15886,8 @@ const apps: RawApp[] = [
             activityIds: [
               '.reader.ui.ReaderActivity', //A 小说阅读界面
               '.pages.main.MainFragmentActivity', //B 短剧界面
+              '.ad.openingscreenad.OpeningScreenADActivity', //C
+              '.component.shortvideo.impl.ShortSeriesActivity', //D
             ],
             matches: [
               '[id="android:id/content"][height>prev.height.plus(100)] >n [id="android:id/content"][height>500]', //出现评论区的可快查特征, 防阻塞同界面的其他规则
@@ -15895,6 +15897,8 @@ const apps: RawApp[] = [
               'https://i.gkd.li/i/35147917', //A 展开...条回复
               'https://i.gkd.li/i/35147919', //A 展开更多
               'https://i.gkd.li/i/35173217', //B 展开...条回复
+              'https://i.gkd.li/i/35203330', //C
+              'https://i.gkd.li/i/35203316', //D
             ],
             excludeSnapshotUrls: [
               'https://i.gkd.li/i/35165101', //A 阅读界面,未出现评论区
@@ -27473,17 +27477,17 @@ const apps: RawApp[] = [
       },
       {
         key: 3,
-        name: '全屏广告-红包弹窗',
+        name: '全屏广告',
         fastQuery: true,
+        activityIds: [
+          'com.yxcorp.gifshow.HomeActivity',
+          'com.yxcorp.plugin.search.SearchActivity',
+        ],
         rules: [
           {
             key: 0,
-            activityIds: [
-              'com.yxcorp.gifshow.HomeActivity',
-              'com.yxcorp.plugin.search.SearchActivity',
-            ],
             matches:
-              '@[clickable=true][width<128][index=parent.childCount.minus(1)] -(1,2) ViewGroup > [text="点击立得奖励" || text^="邀请" || text="红包"]',
+              '@[clickable=true][width<128][index=parent.childCount.minus(1)] -(1,2) ViewGroup > [text="点击立得奖励" || text^="邀请" || text="红包"][visibleToUser=true]',
             exampleUrls:
               'https://m.gkd.li/101449500/f7bbd1db-f519-4ff9-96cb-4cb5b2f483a2',
             snapshotUrls: [
@@ -27496,13 +27500,24 @@ const apps: RawApp[] = [
           },
           {
             key: 1,
-            activityIds: 'com.yxcorp.gifshow.HomeActivity',
             matches:
               '@ImageView[clickable=true][width<107 && height<107][index=0] + TextView[text$="红包"][text.length<10]',
             snapshotUrls: [
               'https://i.gkd.li/i/26678562', //邀好友得大额红包
               'https://i.gkd.li/i/28514398', //恭喜获得免费红包
             ],
+          },
+          {
+            key: 2,
+            position: {
+              left: 'width * 1.0557',
+              top: 'height * -0.0569',
+            },
+            matches:
+              '[height=0] < @ViewGroup[childCount=4] >3 [text="口令已复制"][visibleToUser=true]',
+            snapshotUrls: 'https://i.gkd.li/i/35203973',
+            exampleUrls:
+              'https://e.gkd.li/6030f5cb-9d9d-4b0c-81f6-8b3912f90842',
           },
         ],
       },
@@ -34740,6 +34755,24 @@ const apps: RawApp[] = [
               '[text="以后再说"][clickable=true]',
             ],
             snapshotUrls: 'https://i.gkd.li/i/23787454',
+          },
+        ],
+      },
+      {
+        key: 2,
+        name: '通知提示-更新提示',
+        matchTime: 20000,
+        actionMaximum: 1,
+        resetMatch: 'app',
+        rules: [
+          {
+            fastQuery: true,
+            activityIds: 'com.remote.app.ui.activity.ComposeMainActivity',
+            matches:
+              '@View[getChild(0).text$="不更新"][clickable=true][visibleToUser=true] -n TextView[text$="更新"] < [childCount=4] < * <2 View < ComposeView < [id="android:id/content"]',
+            snapshotUrls: 'https://i.gkd.li/i/35130030',
+            exampleUrls:
+              'https://e.gkd.li/427b504d-30f3-4e18-b525-5be6a6787801',
           },
         ],
       },
@@ -51355,6 +51388,27 @@ const apps: RawApp[] = [
             activityIds: '.lightweb.LightWebNomalStartActivity',
             matches: '[text$="广告"] +5 * > Image',
             snapshotUrls: 'https://i.gkd.li/i/14392332',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'com.vivo.daemonService',
+    name: 'VIVO服务',
+    groups: [
+      {
+        key: 1,
+        name: '功能类-自动关闭温度过低提示',
+        desc: '温度过低... -> 点击确定',
+        rules: [
+          {
+            fastQuery: true,
+            matches:
+              '[getChild(0).text^="温度过低"] < [id="android:id/topPanel"][visibleToUser=true] +2 * > LinearLayout[index=parent.childCount.minus(1)][childCount=1] > Button[text="确定"][clickable=true]',
+            snapshotUrls: 'https://i.gkd.li/i/35131038',
+            exampleUrls:
+              'https://e.gkd.li/124e048b-3ac5-4721-a357-b6bd2182c512',
           },
         ],
       },
