@@ -8918,7 +8918,8 @@ const apps: RawApp[] = [
     groups: [
       {
         key: 1,
-        name: '通知提示-系统更新提示',
+        name: '更新提示',
+        desc: '按[返回键]',
         rules: [
           {
             fastQuery: true,
@@ -27422,6 +27423,22 @@ const apps: RawApp[] = [
           },
         ],
       },
+      {
+        key: 2,
+        name: '局部广告-讲解视频浮窗',
+        desc: 'x掉',
+        rules: [
+          {
+            activityIds:
+              '.activity.manyquestionsearch.activity.PicManySearchActivity',
+            matches:
+              '@TextView[visibleToUser=true][width<126] - [childCount=3] > TextView + Image[text.length>50][width<143 && height>82]',
+            snapshotUrls: 'https://i.gkd.li/i/35228963',
+            exampleUrls:
+              'https://e.gkd.li/e37a46fe-9464-405e-9a93-608a865a519f',
+          },
+        ],
+      },
     ],
   },
   {
@@ -34760,7 +34777,8 @@ const apps: RawApp[] = [
       },
       {
         key: 2,
-        name: '通知提示-更新提示',
+        name: '更新提示',
+        desc: '点击[暂不更新]',
         matchTime: 20000,
         actionMaximum: 1,
         resetMatch: 'app',
@@ -53966,6 +53984,32 @@ const apps: RawApp[] = [
     ],
   },
   {
+    id: 'com.xiaomi.xmsf',
+    name: '小米服务框架',
+    groups: [
+      {
+        key: 1,
+        name: '权限提示-b站申请通知权限',
+        desc: '(⚠️仅限哔哩哔哩app) 点击[拒绝]',
+        matchTime: 10000,
+        actionMaximum: 1,
+        resetMatch: 'app',
+        rules: [
+          {
+            fastQuery: true,
+            activityIds:
+              'com.xiaomi.xms.subscribe_remind.dialog.SubscribeDialogActivity',
+            matches:
+              '[text*="哔哩哔哩"] + [text*="通知"] +n [text="拒绝"][clickable=true]',
+            snapshotUrls: 'https://i.gkd.li/i/35232368',
+            exampleUrls:
+              'https://e.gkd.li/d8b8754f-d66f-483a-b424-75951d782623',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'com.xiaomi.youpin',
     name: '小米有品',
     groups: [
@@ -64730,12 +64774,15 @@ const apps: RawApp[] = [
         resetMatch: 'app',
         rules: [
           {
-            activityIds: '.MainActivity',
+            activityIds: ['.MainActivity', '.AppActivity'],
             matches:
-              '@Button[desc="知道了"][visibleToUser=true] <3 View < View < View < View < FrameLayout < [id="android:id/content"]',
+              'View[desc="公告"] +n @Button[desc="知道了"][clickable=true][visibleToUser=true] <<n [id="android:id/content"]',
+            snapshotUrls: [
+              'https://i.gkd.li/i/14559882',
+              'https://i.gkd.li/i/35229398',
+            ],
             exampleUrls:
-              'https://m.gkd.li/57941037/ae1792dd-210b-4ac2-bfce-c2081ed03498',
-            snapshotUrls: 'https://i.gkd.li/i/14559882',
+              'https://e.gkd.li/a3782695-5b94-4588-9c82-24989d4e04bd',
           },
         ],
       },
