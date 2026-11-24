@@ -28579,6 +28579,20 @@ const apps: RawApp[] = [
           },
         ],
       },
+      {
+        key: 2,
+        name: '全屏广告',
+        rules: [
+          {
+            fastQuery: true,
+            activityIds: 'com.larus.home.impl.MainActivity',
+            matches: '[text*="去体验"] -n [vid="close_btn"][clickable=true]',
+            snapshotUrls: 'https://i.gkd.li/i/35264582',
+            exampleUrls:
+              'https://e.gkd.li/ea9d7744-425d-416d-913d-28e32e89c189',
+          },
+        ],
+      },
     ],
   },
   {
@@ -33497,6 +33511,27 @@ const apps: RawApp[] = [
     ],
   },
   {
+    id: 'com.mt.luna',
+    name: 'Luna',
+    groups: [
+      {
+        key: 1,
+        name: '功能类-自动确认下载',
+        desc: '弹窗, 点击[下载]',
+        rules: [
+          {
+            activityIds: '.activity.MainActivity',
+            matches:
+              '[text="下载"] < @[clickable=true] -n [visibleToUser=true][text="下载文件"]',
+            snapshotUrls: 'https://i.gkd.li/i/35264146',
+            exampleUrls:
+              'https://e.gkd.li/85733b49-2631-4771-a112-5a7e53d736bb',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'com.mt.mtxx.mtxx',
     name: '美图秀秀',
     groups: [
@@ -36449,12 +36484,14 @@ const apps: RawApp[] = [
       {
         key: 2,
         name: '权限提示-通知权限',
-        desc: '点击[取消]',
+        desc: '点击[取消/暂不开启]',
         matchTime: 10000,
         actionMaximum: 1,
+        actionMaximumKey: 0,
         resetMatch: 'app',
         rules: [
           {
+            key: 0,
             fastQuery: true,
             // activityIds: null,
             matches: [
@@ -36462,6 +36499,13 @@ const apps: RawApp[] = [
               '[text="取消"]',
             ],
             snapshotUrls: 'https://i.gkd.li/i/33926663',
+          },
+          {
+            key: 1,
+            activityIds: 'com.dragon.read.pages.main.MainFragmentActivity',
+            matches:
+              '[text="暂不开启"] < @[clickable=true] -n [visibleToUser=true][text*="提醒" || text*="通知"]',
+            snapshotUrls: 'https://i.gkd.li/i/35252162',
           },
         ],
       },
@@ -64783,6 +64827,24 @@ const apps: RawApp[] = [
             ],
             exampleUrls:
               'https://e.gkd.li/a3782695-5b94-4588-9c82-24989d4e04bd',
+          },
+        ],
+      },
+      {
+        key: 2,
+        name: '更新提示',
+        desc: '点击[下次提醒]',
+        matchTime: 10000,
+        actionMaximum: 1,
+        resetMatch: 'app',
+        rules: [
+          {
+            activityIds: '.MainActivity',
+            matches: [
+              '[visibleToUser=true][desc*="更新" || desc*="新版本"]',
+              '[clickable=true][desc="下次提醒"]',
+            ],
+            snapshotUrls: 'https://i.gkd.li/i/35263945',
           },
         ],
       },
