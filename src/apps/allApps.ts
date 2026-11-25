@@ -1382,7 +1382,7 @@ const apps: RawApp[] = [
       {
         key: 0,
         name: '开屏广告', // 该软件会屏蔽无障碍事件，需使用坐标点击方式并在高级设置里开启[启用优化]才能跳过
-        desc: '该规则需要在高级设置中开启[启用优化]才能生效',
+        desc: '⚠️该规则需在工作模式中开启[触摸优化],点击才能生效',
         matchTime: 10000,
         actionMaximum: 1,
         resetMatch: 'app',
@@ -15300,6 +15300,51 @@ const apps: RawApp[] = [
             exampleUrls:
               'https://e.gkd.li/2a61d3de-6117-4d85-8f4d-565f6ee00a57',
             snapshotUrls: 'https://i.gkd.li/i/17358146',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'com.dragon.read.oversea.gp',
+    name: '番茄小说', // 疑似盗版?
+    groups: [
+      {
+        key: 1,
+        name: '权限提示-通知权限', // fork自`com.dragon.read`
+        desc: '点击"取消"',
+        fastQuery: true,
+        activityIds: [
+          '.widget.ConfirmDialogBuilder',
+          '.pages.main.MainFragmentActivity',
+          'com.dragon.read.pages.main.MainFragmentActivity',
+        ],
+        rules: [
+          {
+            key: 0,
+            name: '首页',
+            matchTime: 10000,
+            actionMaximum: 1,
+            resetMatch: 'app',
+            matches: [
+              '[text="开启推送提醒"][visibleToUser=true]',
+              '[text="取消"][visibleToUser=true]',
+            ],
+          },
+          {
+            key: 1, // 通知权限对话框可能多次触发 https://github.com/Lin-arm/GKD_subscription/pull/135
+            name: '小说阅读页',
+            activityIds: '.reader.ui.ReaderActivity',
+            matches: [
+              '[text="开启推送通知"][visibleToUser=true]',
+              '[text="取消"][visibleToUser=true]',
+            ],
+          },
+          {
+            key: 2,
+            matches:
+              'TextView[text="暂不开启"] < @[clickable=true] <n View < View < ComposeView < * < * < [id="android:id/content"]',
+            snapshotUrls: 'https://i.gkd.li/i/35333111',
           },
         ],
       },
@@ -32649,6 +32694,24 @@ const apps: RawApp[] = [
           },
         ],
       },
+      {
+        key: 20,
+        name: '功能类-关闭[未验证应用]提示',
+        desc: '点击[仍然安装]',
+        fastQuery: true,
+        activityIds: 'com.miui.packageInstaller.NewInstallerPrepareActivity',
+        rules: [
+          {
+            matches: [
+              '[text="未验证应用提醒"] + [text^="该应用未通过"]',
+              '[text="仍然安装"]',
+            ],
+            snapshotUrls: 'https://i.gkd.li/i/35331944',
+            exampleUrls:
+              'https://e.gkd.li/8838fcbd-1967-481b-9a1f-7bf3f8264c74',
+          },
+        ],
+      },
     ],
   },
   {
@@ -45105,6 +45168,14 @@ const apps: RawApp[] = [
             matches:
               'Image[text*=".jpg"][width<150 && height<150] < [visibleToUser=true] < @View[clickable=true][childCount=1] <<n FrameLayout[id=null] - [vid="layermanager_penetrate_webview_container_id"]',
             snapshotUrls: 'https://i.gkd.li/i/30710740',
+          },
+          {
+            key: 6,
+            fastQuery: true,
+            activityIds: 'com.taobao.tao.welcome.Welcome',
+            matches:
+              '@Image[text*=".jpg"][width<150][visibleToUser=true] < [childCount=1][height<150] - [height>500] <<n [vid="poplayer_inner_view"]',
+            snapshotUrls: 'https://i.gkd.li/i/35306359',
           },
         ],
       },
