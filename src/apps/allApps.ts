@@ -14909,6 +14909,7 @@ const apps: RawApp[] = [
           },
           {
             key: 4,
+            actionCdKey: 3,
             matches:
               '@View[width<170 && height<170] <3 FrameLayout[childCount=3] < [vid="sdk_view"]',
             snapshotUrls: [
@@ -14921,14 +14922,13 @@ const apps: RawApp[] = [
           {
             key: 10,
             name: '点击坐标①',
+            actionCdKey: 3, //防止 key3、key4已经点击跳过了,短时间内进行坐标点击而导致误触
             position: {
               left: 'width * 0.875',
               top: 'width * 0.10', // 目标节点的height变化太大，不建议使用
             },
-            anyMatches: [
-              '[vid="ad_view"][visibleToUser=true][width>=720][childCount!=0]',
-              '[vid="sdk_view"] >n [vid="animation_view"][visibleToUser=true][width>=720]',
-            ],
+            matches:
+              '[vid="ad_view" || vid="sdk_view"][visibleToUser=true][width>=720][childCount!=0]',
             snapshotUrls: 'https://i.gkd.li/i/23283060', // 按钮[跳过]的位置的top在 (0.05 ~ 0.12) * 宽度1216 范围内
             excludeSnapshotUrls: 'https://i.gkd.li/i/29440952', // 白屏阶段 [vid="ad_loading_view"]
           },
@@ -14940,11 +14940,8 @@ const apps: RawApp[] = [
               left: 'width * 0.875',
               top: 'width * 0.135',
             },
-            anyMatches: [
-              // 选择器跟前面 key10 一样,只是点击位置不同
-              '[vid="ad_view"][visibleToUser=true][width>=720][childCount!=0]',
-              '[vid="sdk_view"] >n [vid="animation_view"][visibleToUser=true][width>=720]',
-            ],
+            matches:
+              '[vid="ad_view" || vid="sdk_view"][visibleToUser=true][width>=720][childCount!=0]', // 选择器跟前面一样,只是点击位置不同
             snapshotUrls: [
               'https://i.gkd.li/i/13575257', // (旧快照) top在 (0.10 ~ 0.17) * 1080 内
               'https://i.gkd.li/i/18423724', // (0.11 ~ 0.16) * 1080
@@ -14960,10 +14957,8 @@ const apps: RawApp[] = [
               left: 'width * 0.875',
               top: 'width * 0.17',
             },
-            anyMatches: [
-              '[vid="ad_view"][visibleToUser=true][width>=720][childCount!=0]',
-              '[vid="sdk_view"] >n [vid="animation_view"][visibleToUser=true][width>=720]', //2️⃣
-            ],
+            matches:
+              '[vid="ad_view" || vid="sdk_view"][visibleToUser=true][width>=720][childCount!=0]',
             snapshotUrls: [
               'https://i.gkd.li/i/13601755', // (旧快照) top在 (0.11 ~ 0.18) * 1200 内
               'https://i.gkd.li/i/23324118', // (0.13 ~ 0.20) * 1280
@@ -14971,6 +14966,7 @@ const apps: RawApp[] = [
               'https://i.gkd.li/i/23652259', // (0.12 ~ 0.19) * 1216
               'https://i.gkd.li/i/24191638', // (0.13 ~ 0.19) * 1260    2️⃣ (仅用[vid="sdk_view"]的话,可能误触key3漏掉的)
               'https://i.gkd.li/i/24362806', // (0.13 ~ 0.20) * 1440
+              'https://i.gkd.li/i/35417943', // (0.13 ~ 0.19) * 1080      (可能误触key3漏掉的)
             ],
           },
           {
@@ -14981,10 +14977,8 @@ const apps: RawApp[] = [
               left: 'width * 0.875',
               top: 'width * 0.20',
             },
-            anyMatches: [
-              '[vid="ad_view"][visibleToUser=true][width>=720][childCount!=0]',
-              '[vid="sdk_view"] >n [vid="animation_view"][visibleToUser=true][width>=720]',
-            ],
+            matches:
+              '[vid="ad_view" || vid="sdk_view"][visibleToUser=true][width>=720][childCount!=0]',
             snapshotUrls: 'https://i.gkd.li/i/16054268', // (0.15 ~ 0.22) * 1200
           },
         ],
@@ -36472,7 +36466,7 @@ const apps: RawApp[] = [
       {
         key: 1,
         name: '功能类-[上滑]继续看短剧',
-        desc: '①读秒结束后[上滑] ②未显示[选集]时,每5秒[上滑]1次',
+        desc: '出现 广告/直播间 时上滑跳过, ①读秒结束后[上滑] ②未显示[选集]时,每5秒[上滑]1次',
         fastQuery: true,
         activityIds: [
           'com.dragon.read.component.shortvideo.impl.ShortSeriesActivity', //A
@@ -40990,6 +40984,43 @@ const apps: RawApp[] = [
             exampleUrls:
               'https://e.gkd.li/4d35d427-f6ab-42bf-a369-65c5b602fcdf',
             snapshotUrls: 'https://i.gkd.li/i/21828292',
+          },
+        ],
+      },
+      {
+        key: 28,
+        name: '全屏广告-小组件弹窗',
+        desc: '点击[暂不添加]跳过组件引导',
+        rules: [
+          {
+            fastQuery: true,
+            activityIds:
+              '.extlibui.appwidget.business.install.WidgetInstallDialogActivity',
+            matches: [
+              '[text*="小组件"][visibleToUser=true]',
+              '[vid="tv_refuse"][clickable=true]',
+            ],
+            snapshotUrls: 'https://i.gkd.li/i/35392812',
+            exampleUrls:
+              'https://e.gkd.li/41feacfb-053c-410f-880f-ac8b8d31d607',
+          },
+        ],
+      },
+      {
+        key: 29,
+        name: '全屏广告-发现页弹窗',
+        desc: '点击×关闭发现页的发布会/直播推广弹窗',
+        rules: [
+          {
+            matchRoot: true,
+            actionMaximum: 1,
+            resetMatch: 'match',
+            activityIds: '.MainTabActivity',
+            matches:
+              '@[clickable=true][childCount=0] <1 [childCount=2] <2 * <1 * >2 [desc="广告"]',
+            snapshotUrls: 'https://i.gkd.li/i/35392878',
+            exampleUrls:
+              'https://e.gkd.li/6156ade7-09c6-48f6-897e-4e701f648b2e',
           },
         ],
       },
@@ -45870,10 +45901,11 @@ const apps: RawApp[] = [
           {
             key: 0,
             matches:
-              '@LinearLayout[clickable=true] - [text^="互动广告"][visibleToUser=true]',
+              '@LinearLayout[clickable=true] -(1,2) [text^="互动广告" || text="广告"][visibleToUser=true]',
             snapshotUrls: [
               'https://i.gkd.li/i/13198082',
               'https://i.gkd.li/i/23557410',
+              'https://i.gkd.li/i/35394224',
             ],
           },
         ],
@@ -56795,6 +56827,77 @@ const apps: RawApp[] = [
             exampleUrls:
               'https://e.gkd.li/ed6e343a-7a53-4d22-84b8-a2da1da5b241',
             snapshotUrls: 'https://i.gkd.li/i/23228410',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'com.xxwolo.cc5',
+    name: '测测',
+    groups: [
+      {
+        key: 0,
+        name: '权限提示-通知权限',
+        desc: '点击[×掉/取消]',
+        activityIds: 'com.cece.app.MainActivity',
+        rules: [
+          {
+            key: 0,
+            name: '底部横幅',
+            matchRoot: true,
+            actionCd: 3000,
+            matches:
+              '[desc*="开启系统通知"] > @[clickable=true][desc=null][width<106][height<107] + [desc="去开启"]',
+            snapshotUrls: 'https://i.gkd.li/i/35392398',
+            exampleUrls:
+              'https://e.gkd.li/94819262-26e5-458b-ba2b-a633924d6456',
+          },
+          {
+            key: 1,
+            name: '弹窗',
+            matchTime: 10000,
+            actionMaximum: 3,
+            matches:
+              '@[desc="取消"][clickable=true] + [desc="打开通知"][clickable=true]',
+            snapshotUrls: 'https://i.gkd.li/i/35392498',
+            exampleUrls:
+              'https://e.gkd.li/26d36064-b217-4a49-993a-83a60d86ea0a',
+          },
+        ],
+      },
+      {
+        key: 1,
+        name: '全屏广告-小组件弹窗',
+        desc: '点击[关闭]',
+        matchTime: 10000,
+        actionMaximum: 1,
+        resetMatch: 'app',
+        rules: [
+          {
+            fastQuery: true,
+            activityIds: 'com.cece.app.MainActivity',
+            matches:
+              '@[desc="关闭"][clickable=true] <n View[desc^="添加小组件"] < * < * < [id="android:id/content"]',
+            snapshotUrls: 'https://i.gkd.li/i/35392522',
+            exampleUrls:
+              'https://e.gkd.li/2d688ba5-7c0f-4737-b764-7efc744600e0',
+          },
+        ],
+      },
+      {
+        key: 2,
+        name: '局部广告-右下角浮窗',
+        desc: '点击×掉',
+        matchRoot: true,
+        forcedTime: 10000,
+        actionCd: 3000,
+        rules: [
+          {
+            activityIds: 'com.cece.app.MainActivity',
+            matches:
+              '@ImageView[clickable=true][childCount=0][width<80][height<80][visibleToUser=true] < [childCount=2][clickable=true][width<350][height<350][visibleToUser=true]',
+            snapshotUrls: 'https://i.gkd.li/i/35392429',
           },
         ],
       },
